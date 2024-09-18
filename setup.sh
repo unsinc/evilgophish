@@ -75,6 +75,7 @@ function setup_evilginx3 () {
     cp /etc/hosts /etc/hosts.bak
     sed -i "s|127.0.0.1.*|127.0.0.1 localhost ${evilginx3_cstring}${root_domain}|g" /etc/hosts
     cp /etc/resolv.conf /etc/resolv.conf.bak
+    sed -i 's/^#DNSStubListener=yes/DNSStubListener=no/' /etc/systemd/resolved.conf
     rm /etc/resolv.conf
     ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
     systemctl stop systemd-resolved
@@ -88,6 +89,7 @@ function setup_evilginx3 () {
 # Configure and install gophish
 function setup_gophish () {
     print_info "Configuring gophish"
+    export CGO_CFLAGS="-g -O2 -Wno-return-local-addr"
     # Setup live feed if selected
     if [[ $(echo "${feed_bool}" | grep -ci "true") -gt 0 ]]; then
         sed -i "s|\"feed_enabled\": false,|\"feed_enabled\": true,|g" gophish/config.json

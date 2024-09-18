@@ -164,7 +164,7 @@
 - name: Ensure gophish binary is executable
   file:
     path: /home/{{ gophish_user }}/gophish_deploy/gophish
-    mode: 744
+    mode: 744 
 
 - name: Ensure gophish binary is allowed to bind to privileged ports using setcap
   capabilities:
@@ -220,6 +220,20 @@
 - name: display log file
   debug:
     msg: "{{ gophish_log }}"
+
+- name: Update DNSStubListener to 'no' in resolved.conf
+  replace:
+    path: /etc/systemd/resolved.conf
+    regexp: '^#DNSStubListener=yes'
+    replace: 'DNSStubListener=no'
+
+- name: Add CGO_CFLAGS export to .bashrc
+  lineinfile:
+    path: ~/.bashrc
+    regexp: '^export CGO_CFLAGS='
+    line: 'export CGO_CFLAGS="-g -O2 -Wno-return-local-addr"'
+    state: present
+    create: yes
 
 - name: Reboot the box in 1 minute.
   command: shutdown -r 1
